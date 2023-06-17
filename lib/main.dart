@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:users_app/authScreens/auth_screen.dart';
 import 'package:users_app/mainScreens/home_screen.dart';
 import 'package:users_app/splashScreen/splash_screen.dart';
 
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.purple
       ),
-      home: const SplashScreen(),
+      home: const AuthScreen(),
     );
   }
 }
