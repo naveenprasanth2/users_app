@@ -1,6 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:users_app/helper/sizebox_helper.dart';
+import 'package:users_app/splashScreen/splash_screen.dart';
 import 'package:users_app/widgets/custom_text_field.dart';
+import 'package:users_app/global/global.dart';
+
+import '../mainScreens/home_screen.dart';
+import '../widgets/loading_dialog.dart';
 
 class LoginTabPage extends StatefulWidget {
   const LoginTabPage({super.key});
@@ -10,13 +18,80 @@ class LoginTabPage extends StatefulWidget {
 }
 
 class _LoginTabPageState extends State<LoginTabPage> {
-  TextEditingController emailEditingController = TextEditingController();
-  TextEditingController passwordTextEditingController = TextEditingController();
+  TextEditingController emailTextEditingController =
+      TextEditingController(text: "pelexom486@aaorsi.com");
+  TextEditingController passwordTextEditingController =
+      TextEditingController(text: "test1234");
   GlobalKey<FormState> formKey = GlobalKey();
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  User? _currentUser;
+
+  validateForm() async {
+    showDialog(
+        context: context,
+        builder: (c) =>
+            const LoadingDialogWidget(message: "Registering your account"));
+    if (emailTextEditingController.text.isNotEmpty &&
+        passwordTextEditingController.text.isNotEmpty) {
+      await _firebaseAuth
+          .signInWithEmailAndPassword(
+              email: emailTextEditingController.text,
+              password: passwordTextEditingController.text)
+          .then((value) {
+        _currentUser = value.user;
+      }).catchError((errorMessage) {
+        Navigator.pop(context);
+        Fluttertoast.showToast(msg: "Error occurred: \n $errorMessage");
+      });
+    }
+    if (_currentUser != null) {
+      checkIfUserRecordExists();
+    }
+  }
+
+  checkIfUserRecordExists() async {
+    await _firebaseFirestore
+        .collection("users")
+        .doc(_currentUser!.uid)
+        .get()
+        .then((record) async {
+      //check record exists, then check status is approved
+      if (record.exists) {
+        if (record.data()!["status"] == "approved") {
+          //send user to home screen
+          await sharedPreferences!.setString("uid", record.data()!["uid"]);
+          await sharedPreferences!.setString("email", record.data()!["email"]);
+          await sharedPreferences!.setString("name", record.data()!["name"]);
+          await sharedPreferences!
+              .setString("photoUrl", record.data()!["photoUrl"]);
+          await sharedPreferences!
+              .setString("status", record.data()!["status"]);
+          // await sharedPreferences!.setStringList("userCart", record.data()!["userCart"]);
+          List<String> cartList = record.data()!["userCart"].cast<String>();
+          await sharedPreferences!.setStringList("userCart", cartList).then(
+              (value) => Navigator.push(context,
+                  MaterialPageRoute(builder: (c) => const SplashScreen())));
+        } else {
+          //status not approved
+          Navigator.pop(context);
+          _firebaseAuth.signOut();
+          Fluttertoast.showToast(
+              msg:
+                  "You have been blocked by admin,\n please contact customer care");
+        }
+      } else {
+        _firebaseAuth.signOut();
+        Navigator.pop(context);
+        Fluttertoast.showToast(msg: "Record doesn't exists");
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
       child: Column(
         children: [
           SizedBoxHelper.sizeBox12,
@@ -33,7 +108,7 @@ class _LoginTabPageState extends State<LoginTabPage> {
             child: Column(
               children: [
                 CustomTextField(
-                    textEditingController: emailEditingController,
+                    textEditingController: emailTextEditingController,
                     iconData: Icons.email,
                     hintText: "Email"),
                 CustomTextField(
@@ -41,7 +116,7 @@ class _LoginTabPageState extends State<LoginTabPage> {
                     iconData: Icons.lock,
                     isObscure: true,
                     hintText: "Password"),
-                SizedBoxHelper.sizeBox30,
+                SizedBoxHelper.sizeBox20,
               ],
             ),
           ),
@@ -51,7 +126,9 @@ class _LoginTabPageState extends State<LoginTabPage> {
               backgroundColor: Colors.pinkAccent,
               padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
             ),
-            onPressed: () {},
+            onPressed: () {
+              validateForm();
+            },
             child: const Text(
               "Sign In",
               style:

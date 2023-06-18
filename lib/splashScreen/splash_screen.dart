@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:users_app/authScreens/auth_screen.dart';
 import 'package:users_app/helper/sizebox_helper.dart';
 import 'package:users_app/mainScreens/home_screen.dart';
 
@@ -12,11 +14,16 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   splashScreenTimer() {
     Timer(const Duration(seconds: 1), () async {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      //if user already logged in
+      if (FirebaseAuth.instance.currentUser != null) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
+      } else {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const AuthScreen()));
+      }
     });
   }
 
@@ -49,8 +56,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 5,
-                    color: Colors.white
-                ),
+                    color: Colors.white),
               )
             ],
           ),
