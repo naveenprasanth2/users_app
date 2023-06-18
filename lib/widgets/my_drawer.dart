@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:users_app/authScreens/auth_screen.dart';
+import 'package:users_app/global/global.dart';
 import 'package:users_app/helper/sizebox_helper.dart';
+import 'package:users_app/splashScreen/splash_screen.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -16,18 +20,18 @@ class MyDrawer extends StatelessWidget {
             child: Column(
               children: [
                 //user profile image
-                Container(
+                SizedBox(
                   height: 160,
                   width: 160,
-                  child: const CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        "https://img.freepik.com/free-photo/beautiful-natural-landscape_1112-205.jpg?w=1480&t=st=1686910266~exp=1686910866~hmac=66a2b30f1270641e8442237cb86217567e5dbe56f45f92d3b97281314fa9167e"),
+                  child: CircleAvatar(
+                    backgroundImage:
+                        NetworkImage(sharedPreferences!.getString("photoUrl")!),
                   ),
                 ),
                 SizedBoxHelper.sizeBox12,
-                const Text(
-                  "User Name",
-                  style: TextStyle(
+                Text(
+                  sharedPreferences!.getString("name")!,
+                  style: const TextStyle(
                       fontSize: 20,
                       color: Colors.grey,
                       fontWeight: FontWeight.bold),
@@ -145,7 +149,13 @@ class MyDrawer extends StatelessWidget {
                       "Logout",
                       style: TextStyle(color: Colors.grey),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      FirebaseAuth.instance.signOut();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (c) => const SplashScreen()));
+                    },
                   ),
                   const Divider(
                     height: 10,
