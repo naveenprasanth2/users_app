@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black12,
+      backgroundColor: Colors.black54,
       drawer: const MyDrawer(),
       appBar: AppBar(
         flexibleSpace: Container(

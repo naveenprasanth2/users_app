@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
+import 'package:users_app/brandsScreens/brands_screen.dart';
 
 import '../models/sellers.dart';
 
@@ -16,7 +17,14 @@ class _SellersUiDesignWidgetState extends State<SellersUiDesignWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (e) => BrandsScreen(
+                      model: widget.model,
+                    )));
+      },
       child: Card(
         color: Colors.black54,
         elevation: 20,
