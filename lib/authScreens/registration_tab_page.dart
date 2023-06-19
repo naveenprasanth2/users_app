@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:users_app/global/global.dart';
-import 'package:users_app/mainScreens/home_screen.dart';
+import 'package:users_app/sellersScreens/home_screen.dart';
 import 'package:users_app/widgets/loading_dialog.dart';
 
 import '../helper/sizebox_helper.dart';

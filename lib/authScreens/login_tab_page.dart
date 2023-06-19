@@ -6,8 +6,6 @@ import 'package:users_app/helper/sizebox_helper.dart';
 import 'package:users_app/splashScreen/splash_screen.dart';
 import 'package:users_app/widgets/custom_text_field.dart';
 import 'package:users_app/global/global.dart';
-
-import '../mainScreens/home_screen.dart';
 import '../widgets/loading_dialog.dart';
 
 class LoginTabPage extends StatefulWidget {
