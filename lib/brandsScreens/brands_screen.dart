@@ -42,19 +42,6 @@ class _BrandsScreenState extends State<BrandsScreen> {
           ),
           automaticallyImplyLeading: true,
           centerTitle: true,
-          actions: [
-            IconButton(
-                onPressed: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (e) => const UploadBrandsScreen()));
-                },
-                icon: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ))
-          ],
         ),
         body: CustomScrollView(
           physics: const BouncingScrollPhysics(),

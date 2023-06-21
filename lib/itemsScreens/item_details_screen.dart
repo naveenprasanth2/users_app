@@ -3,10 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../global/global.dart';
 import '../models/Items.dart';
-import '../sellersScreens/home_screen.dart';
 import '../widgets/appbar_with_cart_badge.dart';
+import '../assistant_methods/cart_methods.dart';
 
 class ItemDetailsScreen extends StatefulWidget {
   Items? model;
@@ -19,6 +18,7 @@ class ItemDetailsScreen extends StatefulWidget {
 
 class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  final CartMethods _cartMethods = CartMethods();
   int counterLimit = 1;
 
   @override
@@ -30,7 +30,12 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         sellerUid: widget.model!.sellerUid,
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          int itemCounter = counterLimit;
+          //1. check if item exists in the cart. can't be done until we add item into cart
+          //2. add item in cart
+          _cartMethods.addItemToCart(widget.model!.itemId!, itemCounter, context);
+        },
         label: const Text("Add to cart"),
         icon: const Icon(Icons.shopping_cart_rounded),
         backgroundColor: Colors.pinkAccent,
