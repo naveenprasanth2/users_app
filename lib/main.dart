@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:users_app/assistant_methods/address_changer.dart';
 import 'package:users_app/assistant_methods/cart_item_counter.dart';
 import 'package:users_app/assistant_methods/total_amount.dart';
 import 'package:users_app/global/global.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (c) => CartItemCounter()),
         ChangeNotifierProvider(create: (c) => TotalAmount()),
+        ChangeNotifierProvider(create: (c) => AddressChanger()),
       ],
       child: MaterialApp(
         title: 'Users App',

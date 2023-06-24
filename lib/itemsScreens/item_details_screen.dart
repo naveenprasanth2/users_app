@@ -17,7 +17,6 @@ class ItemDetailsScreen extends StatefulWidget {
 }
 
 class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
-  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   final CartMethods _cartMethods = CartMethods();
   int counterLimit = 1;
 
@@ -27,7 +26,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       backgroundColor: Colors.black54,
       appBar: AppBarWithCartBadge(
         title: widget.model!.itemTitle.toString(),
-        sellerUid: widget.model!.sellerUid,
+        model: widget.model
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {

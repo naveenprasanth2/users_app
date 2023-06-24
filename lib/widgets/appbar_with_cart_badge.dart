@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:users_app/assistant_methods/cart_item_counter.dart';
 import 'package:users_app/cartScreens/cart_screen.dart';
+import 'package:users_app/models/Items.dart';
 
 class AppBarWithCartBadge extends StatefulWidget
     implements PreferredSizeWidget {
   PreferredSizeWidget? preferredSizeWidget;
-  String? sellerUid;
+  Items? model;
   String? title;
 
   AppBarWithCartBadge(
-      {super.key, this.preferredSizeWidget, this.sellerUid, this.title});
+      {super.key, this.preferredSizeWidget, this.model, this.title});
 
   @override
   State<AppBarWithCartBadge> createState() => _AppBarWithCartBadgeState();
@@ -41,8 +42,10 @@ class _AppBarWithCartBadgeState extends State<AppBarWithCartBadge> {
           children: [
             IconButton(
                 onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (e) => const CartScreen()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (e) => CartScreen(
+                            model: widget.model,
+                          )));
                 },
                 icon: const Icon(
                   Icons.shopping_cart,
