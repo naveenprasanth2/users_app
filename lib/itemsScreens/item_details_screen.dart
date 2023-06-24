@@ -33,8 +33,15 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         onPressed: () {
           int itemCounter = counterLimit;
           //1. check if item exists in the cart. can't be done until we add item into cart
-          //2. add item in cart
-          _cartMethods.addItemToCart(widget.model!.itemId!, itemCounter, context);
+          if (_cartMethods
+              .separateItemIdsFromUserCartList()
+              !.contains(widget.model!.itemId)) {
+            Fluttertoast.showToast(msg: "Item already exists in cart");
+          }else{
+            //2. add item in cart
+            _cartMethods.addItemToCart(
+                widget.model!.itemId!, itemCounter, context);
+          }
         },
         label: const Text("Add to cart"),
         icon: const Icon(Icons.shopping_cart_rounded),

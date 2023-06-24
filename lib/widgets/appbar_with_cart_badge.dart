@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:users_app/assistant_methods/cart_item_counter.dart';
+import 'package:users_app/cartScreens/cart_screen.dart';
 
 class AppBarWithCartBadge extends StatefulWidget
     implements PreferredSizeWidget {
@@ -37,15 +40,18 @@ class _AppBarWithCartBadgeState extends State<AppBarWithCartBadge> {
         Stack(
           children: [
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (e) => const CartScreen()));
+                },
                 icon: const Icon(
                   Icons.shopping_cart,
                   color: Colors.white,
                 )),
-           const Positioned(
+            Positioned(
               child: Stack(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.brightness_1,
                     size: 20,
                     color: Colors.deepPurple,
@@ -54,7 +60,13 @@ class _AppBarWithCartBadgeState extends State<AppBarWithCartBadge> {
                     top: 3,
                     right: 5,
                     child: Center(
-                      child: Text("O"),
+                      child: Consumer<CartItemCounter>(
+                          builder: (context, provider, _) {
+                        return Text(
+                          provider.count.toString(),
+                          style: const TextStyle(color: Colors.white),
+                        );
+                      }),
                     ),
                   )
                 ],
