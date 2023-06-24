@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:users_app/addressScreens/address_screen.dart';
 import 'package:users_app/global/global.dart';
 import 'package:users_app/splashScreen/splash_screen.dart';
 import 'package:users_app/widgets/appbar_with_cart_badge.dart';
@@ -11,7 +12,8 @@ import '../models/Items.dart';
 import 'cart_tem_design_widget.dart';
 
 class CartScreen extends StatefulWidget {
-  const CartScreen({super.key});
+  Items? model;
+  CartScreen({super.key, this.model});
 
   @override
   State<CartScreen> createState() => _CartScreenState();
@@ -41,29 +43,39 @@ class _CartScreenState extends State<CartScreen> {
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(left: 30),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            FloatingActionButton.extended(
-              //without this hero tag it will show error when using more than one floating action button
-              heroTag: "btn1",
-              onPressed: () {
-                cartMethods.clearCart(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (e) => const SplashScreen()));
-              },
-              label: const Text("Clear Cart"),
-              icon: const Icon(Icons.clear_all),
-            ),
-            FloatingActionButton.extended(
-              //without this hero tag it will show error when using more than one floating action button
-              heroTag: "btn2",
-              onPressed: () {},
-              label: const Text("Checkout"),
-              icon: const Icon(Icons.shopping_cart_checkout),
-            ),
-          ],
-        ),
+        child: quantitiesList!.isEmpty
+            ? Container()
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  FloatingActionButton.extended(
+                    //without this hero tag it will show error when using more than one floating action button
+                    heroTag: "btn1",
+                    onPressed: () {
+                      cartMethods.clearCart(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (e) => const SplashScreen()));
+                    },
+                    label: const Text("Clear Cart"),
+                    icon: const Icon(Icons.clear_all),
+                  ),
+                  FloatingActionButton.extended(
+                    //without this hero tag it will show error when using more than one floating action button
+                    heroTag: "btn2",
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (e) => AddressScreen(
+                            sellerUid: widget.model!.sellerUid,
+                            totalAmount: totalPrice,
+                          )));
+                    },
+                    label: const Text("Checkout"),
+                    icon: const Icon(Icons.shopping_cart_checkout),
+                  ),
+                ],
+              ),
       ),
       body: quantitiesList!.isEmpty
           ? const Center(
