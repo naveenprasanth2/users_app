@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:users_app/assistant_methods/address_changer.dart';
+import 'package:users_app/placeOrderScreen/place_order_screen.dart';
 
 import '../models/address.dart';
 
@@ -30,7 +31,7 @@ class _AddressDesignWidgetState extends State<AddressDesignWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.black54,
+      color: Colors.white54,
       child: Column(
         children: [
           Row(
@@ -49,7 +50,7 @@ class _AddressDesignWidgetState extends State<AddressDesignWidget> {
                 children: [
                   Container(
                     padding: const EdgeInsets.all(10),
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery.of(context).size.width * 0.85,
                     child: Table(
                       children: [
                         TableRow(children: [
@@ -68,10 +69,10 @@ class _AddressDesignWidgetState extends State<AddressDesignWidget> {
                         ]),
                         const TableRow(children: [
                           SizedBox(
-                            height: 10,
+                            height: 5,
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 5,
                           )
                         ]),
                         TableRow(children: [
@@ -90,10 +91,10 @@ class _AddressDesignWidgetState extends State<AddressDesignWidget> {
                         ]),
                         const TableRow(children: [
                           SizedBox(
-                            height: 10,
+                            height: 5,
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 5,
                           )
                         ]),
                         TableRow(children: [
@@ -112,10 +113,10 @@ class _AddressDesignWidgetState extends State<AddressDesignWidget> {
                         ]),
                         const TableRow(children: [
                           SizedBox(
-                            height: 10,
+                            height: 5,
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 5,
                           )
                         ]),
                       ],
@@ -126,12 +127,22 @@ class _AddressDesignWidgetState extends State<AddressDesignWidget> {
             ],
           ),
           widget.value == Provider.of<AddressChanger>(context).count
-              ? ElevatedButton(
-                  onPressed: () {
-                    //send user to order screen
-                  },
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                  child: const Text("Proceed"),
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 10, bottom: 10),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      //send user to order screen
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (e) => PlaceOrderScreen(
+                                sellerUid: widget.sellerUid,
+                                totalAmount: widget.totalAmount.toString(),
+                                addressId: widget.addressId,
+                              )));
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.pinkAccent),
+                    child: const Text("Proceed"),
+                  ),
                 )
               : Container(),
         ],
