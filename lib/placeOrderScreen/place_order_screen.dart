@@ -80,6 +80,22 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.pinkAccent, Colors.purpleAccent],
+                begin: Alignment.topLeft,
+                end: Alignment.topRight,
+              )),
+        ),
+        title: const Text(
+          "Complete Order",
+          style: TextStyle(fontWeight: FontWeight.normal),
+        ),
+        centerTitle: true,
+        automaticallyImplyLeading: true,
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
