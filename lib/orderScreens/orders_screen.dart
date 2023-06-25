@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:users_app/global/global.dart';
 
+import 'order_card.dart';
+
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
 
@@ -40,12 +42,49 @@ class _OrdersScreenState extends State<OrdersScreen> {
             .where("status", isEqualTo: "normal")
             .orderBy("orderTime", descending: true)
             .snapshots(),
-        builder: (_, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            if(snapshot.data.)
+        builder: (_, AsyncSnapshot dataSnapshot) {
+          if (dataSnapshot.hasData) {
+            return ListView.builder(
+                itemCount: dataSnapshot.data.docs.length,
+                itemBuilder: (c, index) {
+                  return FutureBuilder(
+                    future: _firebaseFirestore
+                        .collection("items")
+                        .where("itemId",
+                            whereIn: cartMethods.separateOrderItemIds(
+                                (dataSnapshot.data.docs[index].data()
+                                    as Map<String, dynamic>)["productIds"]))
+                        .where("orderBy",
+                            whereIn: (dataSnapshot.data.docs[index].data()
+                                as Map<String, dynamic>)["uid"])
+                        .orderBy("publishDate", descending: true)
+                        .get(),
+                    builder: (c, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        return OrderCard(
+                          itemCount: snapshot.data.docs.length,
+                          data: snapshot.data.docs,
+                          orderId: dataSnapshot.data.docs[index].id,
+                          quantitiesList: cartMethods.separateItemQuantities(
+                              (dataSnapshot.data.docs[index].data()
+                                  as Map<String, dynamic>)["productIds"]),
+                        );
+                      } else {
+                        return const Center(
+                          child: Text(
+                            "No Orders Found \n Place a new order",
+                            style:
+                                TextStyle(color: Colors.white54, fontSize: 15),
+                          ),
+                        );
+                      }
+                    },
+                  );
+                });
           } else {
             return const Center(
-              child: Text("No Orders Found \n Place a new order"),
+              child: Text("No Orders Found \n Place a new order",
+                  style: TextStyle(color: Colors.white54, fontSize: 15)),
             );
           }
         },
