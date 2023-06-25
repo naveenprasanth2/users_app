@@ -72,4 +72,25 @@ class CartMethods {
         .toList();
     return quantityList;
   }
+
+  List<String>? separateOrderItemIds(productIds) {
+    List<String>? userCartList = List<String>.from(productIds);
+    List<String>? itemsIdsList = userCartList
+        .where((element) => element.contains(":"))
+        .map((e) => e.split(":")[0])
+        .toList();
+    return itemsIdsList;
+  }
+
+  List<String>? separateItemQuantities(productIds) {
+    List<String>? userCartList = List<String>.from(productIds);
+
+    List<String>? quantityList = userCartList
+        .where(
+          (element) => element.contains(":"),
+        ).map((e) => e.split(":")[1])
+        .toList();
+
+    return quantityList;
+  }
 }
