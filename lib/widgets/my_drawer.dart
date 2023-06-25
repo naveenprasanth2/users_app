@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:users_app/authScreens/auth_screen.dart';
 import 'package:users_app/global/global.dart';
 import 'package:users_app/helper/sizebox_helper.dart';
+import 'package:users_app/orderScreens/orders_screen.dart';
 import 'package:users_app/splashScreen/splash_screen.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -25,7 +26,7 @@ class MyDrawer extends StatelessWidget {
                   width: 160,
                   child: CircleAvatar(
                     backgroundImage:
-                        NetworkImage(sharedPreferences!.getString("photoUrl")!),
+                    NetworkImage(sharedPreferences!.getString("photoUrl")!),
                   ),
                 ),
                 SizedBoxHelper.sizeBox12,
@@ -80,7 +81,10 @@ class MyDrawer extends StatelessWidget {
                       "My Orders",
                       style: TextStyle(color: Colors.grey),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (e) => const OrdersScreen()));
+                    },
                   ),
                   const Divider(
                     height: 10,
