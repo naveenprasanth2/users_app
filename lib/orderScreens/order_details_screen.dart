@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:users_app/global/global.dart';
+import 'package:users_app/orderScreens/address_design_widget.dart';
 import 'package:users_app/orderScreens/status_banner_widget.dart';
+
+import '../models/address.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
   String? orderId;
@@ -84,7 +87,14 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         .get(),
                     builder: (c, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
-                        return
+                        return AddressDesign(
+                          addressModel: Address.fromJson(
+                              snapshot.data.data() as Map<String, dynamic>),
+                          orderStatus: orderDataMap!["status"].toString(),
+                          orderId: orderDataMap["orderId"],
+                          orderByUser: orderDataMap["orderBy"],
+                          sellerId: orderDataMap["sellerUid"]
+                        );
                       } else {
                         return const Center(
                             child: Text("OOPS!No Address exists"));

@@ -25,53 +25,32 @@ class StatusBanner extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                ),
-              ),
-            ],
+          const SizedBox(
+            width: 30,
+          ),
+          Text(
+            orderStatus == "ended"
+                ? "Parcel Delivered $message"
+                : orderStatus == "shifted"
+                    ? "Parcel shifted $message"
+                    : orderStatus == "normal"
+                        ? "Order Placed $message"
+                        : "",
+            style: const TextStyle(color: Colors.white),
           ),
           const SizedBox(
-            width: 70,
+            width: 5,
           ),
-          Row(
-            children: [
-              Text(
-                orderStatus == "ended"
-                    ? "Parcel Delivered $message"
-                    : orderStatus == "shifted"
-                        ? "Parcel shifted $message"
-                        : orderStatus == "normal"
-                            ? "Order Placed $message"
-                            : "",
-                style: const TextStyle(color: Colors.white),
+          CircleAvatar(
+            radius: 10,
+            backgroundColor: Colors.black,
+            child: Center(
+              child: Icon(
+                iconData,
+                color: Colors.white,
+                size: 14,
               ),
-              const SizedBox(
-                width: 5,
-              ),
-              CircleAvatar(
-                radius: 10,
-                backgroundColor: Colors.black,
-                child: Center(
-                  child: Icon(
-                    iconData,
-                    color: Colors.white,
-                    size: 14,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 60,
-              ),
-            ],
+            ),
           ),
         ],
       ),

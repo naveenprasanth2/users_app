@@ -34,6 +34,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
       "paymentDetails": "Cash on Delivery",
       "orderTime": orderId,
       "orderId": orderId,
+      "SellerUid": widget.sellerUid,
       "isSuccess": true,
       "status": "normal"
     }).whenComplete(() {
@@ -45,6 +46,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
         "paymentDetails": "Cash on Delivery",
         "orderTime": orderId,
         "orderId": orderId,
+        "sellerUid": widget.sellerUid,
         "isSuccess": true,
         "status": "normal"
       });
