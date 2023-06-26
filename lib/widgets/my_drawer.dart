@@ -6,6 +6,8 @@ import 'package:users_app/helper/sizebox_helper.dart';
 import 'package:users_app/orderScreens/orders_screen.dart';
 import 'package:users_app/splashScreen/splash_screen.dart';
 
+import '../notYetReceivedOrders/not_yet_shifted_orders_screen.dart';
+
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
 
@@ -26,7 +28,7 @@ class MyDrawer extends StatelessWidget {
                   width: 160,
                   child: CircleAvatar(
                     backgroundImage:
-                    NetworkImage(sharedPreferences!.getString("photoUrl")!),
+                        NetworkImage(sharedPreferences!.getString("photoUrl")!),
                   ),
                 ),
                 SizedBoxHelper.sizeBox12,
@@ -82,8 +84,8 @@ class MyDrawer extends StatelessWidget {
                       style: TextStyle(color: Colors.grey),
                     ),
                     onTap: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (e) => const OrdersScreen()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (e) => const OrdersScreen()));
                     },
                   ),
                   const Divider(
@@ -102,7 +104,10 @@ class MyDrawer extends StatelessWidget {
                       "Not yet received orders",
                       style: TextStyle(color: Colors.grey),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (e) => const NotYetShiftedOrdersScreen()));
+                    },
                   ),
                   const Divider(
                     height: 10,

@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:users_app/helper/sizebox_helper.dart';
 
 import '../models/address.dart';
@@ -21,6 +23,7 @@ class AddressDesign extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     return Column(
       children: [
         const Padding(
@@ -95,13 +98,29 @@ class AddressDesign extends StatelessWidget {
         SizedBoxHelper.sizeBox40,
         GestureDetector(
           onTap: () {
-            orderStatus == "ended"
-                ? Navigator.pop(context)
-                : orderStatus == "shifted"
-                    ? "Confirm Delivered"
-                    : orderStatus == "normal"
-                        ? Navigator.pop(context)
-                        : Navigator.pop(context);
+            if (orderStatus == "ended") {
+              Navigator.pop(context);
+            } else if (orderStatus == "shifted") {
+              firebaseFirestore
+                  .collection("orders")
+                  .doc(orderId)
+                  .update({"status": "ended"}).whenComplete(() {
+                firebaseFirestore
+                    .collection("users")
+                    .doc(orderByUser)
+                    .collection("orders")
+                    .doc(orderId)
+                    .update({"status": "ended"});
+
+                //send notification to seller
+
+                Fluttertoast.showToast(msg: "Order Delivered Successfully");
+                Navigator.pop(context);
+              });
+            }
+            if (orderStatus == "normal") {
+              //implement rate seller feature
+            }
           },
           child: Padding(
             padding: const EdgeInsets.all(12.0),
