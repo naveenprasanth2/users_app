@@ -71,8 +71,6 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
 
   saveOrderDetailsForSeller(Map<String, dynamic> orderDetailsMap) async {
     await _firebaseFirestore
-        .collection("sellers")
-        .doc(widget.sellerUid)
         .collection("orders")
         .doc(orderId)
         .set(orderDetailsMap);
