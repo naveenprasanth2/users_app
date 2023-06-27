@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:users_app/helper/sizebox_helper.dart';
+import 'package:users_app/ratingScreen/rate_seller_screen.dart';
 
 import '../models/address.dart';
 
@@ -99,7 +100,14 @@ class AddressDesign extends StatelessWidget {
         GestureDetector(
           onTap: () {
             if (orderStatus == "ended") {
-              Navigator.pop(context);
+              //implement rate seller feature
+              print(sellerId);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (e) => RateSellerScreen(
+                            sellerId: sellerId,
+                          )));
             } else if (orderStatus == "shifted") {
               firebaseFirestore
                   .collection("orders")
@@ -119,7 +127,7 @@ class AddressDesign extends StatelessWidget {
               });
             }
             if (orderStatus == "normal") {
-              //implement rate seller feature
+              Navigator.pop(context);
             }
           },
           child: Padding(

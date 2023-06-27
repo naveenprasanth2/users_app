@@ -6,6 +6,7 @@ import 'package:users_app/helper/sizebox_helper.dart';
 import 'package:users_app/orderScreens/orders_screen.dart';
 import 'package:users_app/splashScreen/splash_screen.dart';
 
+import '../history/history.dart';
 import '../notYetReceivedOrders/not_yet_shifted_orders_screen.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -124,7 +125,10 @@ class MyDrawer extends StatelessWidget {
                       "History",
                       style: TextStyle(color: Colors.grey),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (e) => const HistoryScreen()));
+                    },
                   ),
                   const Divider(
                     height: 10,
