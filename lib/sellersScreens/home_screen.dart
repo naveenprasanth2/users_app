@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:users_app/global/global.dart';
+import 'package:users_app/push_notifications/push_notifications_system.dart';
 import 'package:users_app/sellersScreens/sellers_ui_design_widget.dart';
 import 'package:users_app/widgets/my_drawer.dart';
 import 'package:users_app/global/global.dart';
@@ -22,6 +23,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    PushNotificationSystem pushNotificationSystem = PushNotificationSystem();
+    pushNotificationSystem.generateDeviceRecognitionToken();
+    pushNotificationSystem.whenNotificationReceived(context);
     cartMethods.clearCart(context);
   }
 

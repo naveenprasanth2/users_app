@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
 import 'package:users_app/helper/sizebox_helper.dart';
+import 'package:users_app/ratingScreen/rate_seller_screen.dart';
 
+import '../global/global.dart';
 import '../models/address.dart';
 
 class AddressDesign extends StatelessWidget {
@@ -20,6 +25,57 @@ class AddressDesign extends StatelessWidget {
     this.sellerId,
     this.orderByUser,
   });
+
+  sendNotificationToSeller(String sellerUid, String orderId) async {
+    String sellerDeviceToken = "";
+    await FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(sellerUid)
+        .get()
+        .then((snapshot) {
+      if (snapshot.data()!["sellerDeviceToken"] != null) {
+        sellerDeviceToken = snapshot.data()!["sellerDeviceToken"].toString();
+      }
+
+      notificationFormat(
+          sellerDeviceToken, orderId, sharedPreferences!.getString("name"));
+    });
+  }
+
+  notificationFormat(String sellerDeviceToken, String orderId, String? name) {
+    //all these things are as per fcm documentation, don't deviate
+    Map<String, String> headerNotification = {
+      'Content-Type': 'application/json',
+      'Authorization': fcmServerToken,
+    };
+
+    Map<String, String> bodyNotification = {
+      'body':
+      'Dear Seller, new order number (# $orderId) has been received by the user $name successfully',
+      'title': 'New Order'
+    };
+
+    Map dataMap = {
+      'click_action': "FLUTTER_NOTIFICATION_CLICK",
+      'id': '1',
+      'status': 'done',
+      'userOrderId': orderId
+    };
+
+    Map officialNotificationFormat = {
+      'notification': bodyNotification,
+      'data': dataMap,
+      'priority': 'high',
+      'to': sellerDeviceToken
+    };
+    //comes from http dependency
+    post(
+      //uri is as per documentation
+        Uri.parse("https://fcm.googleapis.com/fcm/send"),
+        headers: headerNotification,
+        body: jsonEncode(officialNotificationFormat)
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +155,14 @@ class AddressDesign extends StatelessWidget {
         GestureDetector(
           onTap: () {
             if (orderStatus == "ended") {
-              Navigator.pop(context);
+              //implement rate seller feature
+              print(sellerId);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (e) => RateSellerScreen(
+                            sellerId: sellerId,
+                          )));
             } else if (orderStatus == "shifted") {
               firebaseFirestore
                   .collection("orders")
@@ -113,13 +176,13 @@ class AddressDesign extends StatelessWidget {
                     .update({"status": "ended"});
 
                 //send notification to seller
-
+                sendNotificationToSeller(sellerId!, orderId!);
                 Fluttertoast.showToast(msg: "Order Delivered Successfully");
                 Navigator.pop(context);
               });
             }
             if (orderStatus == "normal") {
-              //implement rate seller feature
+              Navigator.pop(context);
             }
           },
           child: Padding(
