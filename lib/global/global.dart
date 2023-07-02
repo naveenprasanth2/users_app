@@ -3,7 +3,7 @@ import 'package:users_app/assistant_methods/cart_methods.dart';
 
 SharedPreferences? sharedPreferences;
 
-final itemsImageList  = [
+final itemsImageList = [
   "slider/0.jpg",
   "slider/1.jpg",
   "slider/2.jpg",
@@ -25,3 +25,6 @@ CartMethods cartMethods = CartMethods();
 double countStarsRating = 0.0;
 
 String titleStarsRating = "";
+
+String fcmServerToken =
+    "key=AAAA_2r-DUI:APA91bEPcFHZhJXP_HcgNAtV96ng4EH2qTBdDKSvzFzA8tiN572VwcnOgxegficol6W6tYsEMsNGGqAvmvyI5uZZZ4VRtm6qCVbWY4LBNBSE30f2VMKk8RP46325KbA6PGqGIuJ1S6p_";

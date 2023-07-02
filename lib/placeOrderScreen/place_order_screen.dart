@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
 import 'package:users_app/global/global.dart';
 import 'package:users_app/helper/sizebox_helper.dart';
 import 'package:users_app/sellersScreens/home_screen.dart';
@@ -22,7 +25,7 @@ class PlaceOrderScreen extends StatefulWidget {
 }
 
 class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
-  FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   String orderId = DateTime.now().millisecondsSinceEpoch.toString();
 
   orderDetails() {
@@ -52,11 +55,12 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
       });
     }).whenComplete(() {
       cartMethods.clearCart(context);
+      //send notification to seller on the order from the user
       Fluttertoast.showToast(msg: "Order has been placed successfully");
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (e) => const HomeScreen()));
+      sendNotificationToSeller(widget.sellerUid.toString(), orderId);
       orderId = "";
-      //send notifications
     });
   }
 
@@ -76,6 +80,57 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
         .set(orderDetailsMap);
   }
 
+  sendNotificationToSeller(String sellerUid, String orderId) async {
+    String sellerDeviceToken = "";
+    await _firebaseFirestore
+        .collection("sellers")
+        .doc(sellerUid)
+        .get()
+        .then((snapshot) {
+      if (snapshot.data()!["sellerDeviceToken"] != null) {
+        sellerDeviceToken = snapshot.data()!["sellerDeviceToken"].toString();
+      }
+
+      notificationFormat(
+          sellerDeviceToken, orderId, sharedPreferences!.getString("name"));
+    });
+  }
+
+  notificationFormat(String sellerDeviceToken, String orderId, String? name) {
+    //all these things are as per fcm documentation, don't deviate
+    Map<String, String> headerNotification = {
+      'Content-Type': 'application/json',
+      'Authorization': fcmServerToken,
+    };
+
+    Map<String, String> bodyNotification = {
+      'body':
+          'Dear Seller, new order number (# $orderId) has been placed by $name \n Please ship as soon as possible',
+      'title': 'New Order'
+    };
+
+    Map dataMap = {
+      'click_action': "FLUTTER_NOTIFICATION_CLICK",
+      'id': '1',
+      'status': 'done',
+      'userOrderId': orderId
+    };
+
+    Map officialNotificationFormat = {
+      'notification': bodyNotification,
+      'data': dataMap,
+      'priority': 'high',
+      'to': sellerDeviceToken
+    };
+    //comes from http dependency
+    post(
+      //uri is as per documentation
+      Uri.parse("https://fcm.googleapis.com/fcm/send"),
+        headers: headerNotification,
+        body: jsonEncode(officialNotificationFormat)
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,10 +139,10 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
         flexibleSpace: Container(
           decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.pinkAccent, Colors.purpleAccent],
-                begin: Alignment.topLeft,
-                end: Alignment.topRight,
-              )),
+            colors: [Colors.pinkAccent, Colors.purpleAccent],
+            begin: Alignment.topLeft,
+            end: Alignment.topRight,
+          )),
         ),
         title: const Text(
           "Complete Order",
