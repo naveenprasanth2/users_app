@@ -17,9 +17,9 @@ class LoginTabPage extends StatefulWidget {
 
 class _LoginTabPageState extends State<LoginTabPage> {
   TextEditingController emailTextEditingController =
-      TextEditingController(text: "pelexom486@aaorsi.com");
+      TextEditingController();
   TextEditingController passwordTextEditingController =
-      TextEditingController(text: "test1234");
+      TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
