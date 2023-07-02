@@ -4,6 +4,7 @@ import 'package:users_app/authScreens/auth_screen.dart';
 import 'package:users_app/global/global.dart';
 import 'package:users_app/helper/sizebox_helper.dart';
 import 'package:users_app/orderScreens/orders_screen.dart';
+import 'package:users_app/searchScreens/search_screen.dart';
 import 'package:users_app/splashScreen/splash_screen.dart';
 
 import '../history/history.dart';
@@ -145,7 +146,12 @@ class MyDrawer extends StatelessWidget {
                       "Search",
                       style: TextStyle(color: Colors.grey),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (e) => const SearchScreen()));
+                    },
                   ),
                   const Divider(
                     height: 10,
