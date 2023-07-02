@@ -1,13 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:users_app/functions/functions.dart';
 import 'package:users_app/global/global.dart';
 import 'package:users_app/push_notifications/push_notifications_system.dart';
 import 'package:users_app/sellersScreens/sellers_ui_design_widget.dart';
+import 'package:users_app/splashScreen/splash_screen.dart';
 import 'package:users_app/widgets/my_drawer.dart';
-import 'package:users_app/global/global.dart';
-
 import '../models/sellers.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,6 +20,23 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+
+  restrictBlockedUsersFromUsingUsersApp() async {
+    await _firebaseFirestore
+        .collection("users")
+        .doc(sharedPreferences!.getString("uid"))
+        .get()
+        .then((snapshot) {
+      if (snapshot.data()!["status"] != "approved") {
+        showReusableSnackBar(
+            context, "You are blocked \n Please contact admin", Colors.red);
+        FirebaseAuth.instance.signOut();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (e) => const SplashScreen()));
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -26,7 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
     PushNotificationSystem pushNotificationSystem = PushNotificationSystem();
     pushNotificationSystem.generateDeviceRecognitionToken();
     pushNotificationSystem.whenNotificationReceived(context);
-    cartMethods.clearCart(context);
+    restrictBlockedUsersFromUsingUsersApp();
+    // cartMethods.clearCart(context);
   }
 
   @override
